@@ -21,9 +21,9 @@ spring:
     redis:
       cache-null-values: true
   rabbitmq:
-      host: 192.168.117.113
+      host:
       port: 5672
-      username: admin
+      username:
       password: admin
       virtual-host: /
       # 开启消息确认
