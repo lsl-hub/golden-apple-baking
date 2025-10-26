@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.AddressMapper">
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into address (user_id, consignee, sex, phone,province_code, province_name, city_code,city_name,district_code, district_name, detail,is_default, create_time, update_time) VALUES
+         (#{userId},#{consignee},#{sex},#{phone}, #{provinceCode},#{provinceName},#{cityCode}, #{cityName},#{districtCode}, #{districtName},#{detail}, #{isDefault}, #{createTime},#{updateTime})
+
+    </insert>
+    <update id="update">
+        update address
+        <set>
+            <if test="consignee != null and consignee != ''">
+                consignee = #{consignee},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="provinceCode != null and provinceCode != ''">
+                province_code = #{provinceCode},
+            </if>
+            <if test="provinceName != null and provinceName != ''">
+                province_name = #{provinceName},
+            </if>
+            <if test="cityCode != null and cityCode != ''">
+                city_code = #{cityCode},
+            </if>
+            <if test="cityName != null and cityName != ''">
+                city_name = #{cityName},
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                district_code = #{districtCode},
+            </if>
+            <if test="districtName != null and districtName != ''">
+                district_name = #{districtName},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail},
+            </if>
+            <if test="isDefault != null">
+                is_default = #{isDefault},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+    <update id="cancelOtherDefaultAddresses">
+        update address set is_default = 0 where id != #{id}
+    </update>
+    <delete id="delete">
+        delete  from address where id = #{id}
+    </delete>
+    <select id="list" resultType="com.cake.vo.AddressVO">
+        select * from address where user_id = #{userId}
+    </select>
+
+</mapper>

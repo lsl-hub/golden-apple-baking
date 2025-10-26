@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.ShoppingCartMapper">
+    <insert id="insert">
+        insert into shopping_cart(name, image, user_id, product_id, num, number, amount, create_time, update_time) VALUES
+        ( #{name},#{image}, #{userId}, #{productId},#{num}, #{number},#{amount}, #{createTime},#{updateTime})
+    </insert>
+    <update id="update">
+        update shopping_cart
+        <set>
+            <!-- 只有字段非空时才更新 -->
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="number != null and number != ''">
+                number = #{number},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <update id="clearCart">
+        delete from shopping_cart
+    </update>
+    <delete id="BatchDelete">
+        delete from shopping_cart where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteCartByProduct">
+        delete from shopping_cart where product_id in
+        <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+
+    <select id="getProduct" resultType="com.cake.entity.ShoppingCart">
+        select * from shopping_cart
+        <where>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="productId != null">
+                and product_id = #{productId}
+            </if>
+            <if test="number != null">
+                and number = #{number}
+            </if>
+        </where>
+    </select>
+    <select id="list" resultType="com.cake.vo.ShoppingCartVO">
+        select * from shopping_cart where user_id = #{userId}
+    </select>
+</mapper>

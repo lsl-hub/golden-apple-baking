@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.UserMapper">
+    <insert id="add">
+        insert into user(name,password,amount) VALUES(#{name},#{password},#{amount})
+    </insert>
+    <update id="update">
+        update user
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="select" resultType="com.cake.entity.User">
+        select * from user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="password != null">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+    <select id="getAmount" resultType="com.cake.entity.User">
+        select * from user where id  = #{id}
+    </select>
+    <select id="getUserInfo" resultType="com.cake.vo.GetUser">
+        select  name ,amount from user where id = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.CakeSelectionMapper">
+
+    <resultMap id="CakeVOResultMap" type="com.cake.vo.CakeVO">
+        <!-- Product 表的基本字段 -->
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="image" column="image"/>
+        <result property="category_id" column="category_id"/>
+        <result property="tasteId" column="taste_id"/>
+        <result property="sweet" column="sweet"/>
+        <result property="description" column="description"/>
+
+        <!-- Size 实体集合映射 -->
+        <collection property="specs" ofType="com.cake.entity.Size">
+            <id property="id" column="s_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="number" column="number"/>
+            <result property="price" column="price"/>
+            <result property="length" column="length"/>
+            <result property="width" column="width"/>
+            <result property="weight" column="weight"/>
+            <result property="createTime" column="s_create_time"/>
+            <result property="updateTime" column="s_update_time"/>
+            <result property="createUser" column="s_create_user"/>
+            <result property="updateUser" column="s_update_user"/>
+        </collection>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into product(name,category_id,taste_id,image, sweet, description, create_time, update_time, create_user, update_user)
+        VALUES (#{name},#{categoryId},#{tasteId},#{image}, #{sweet},#{description}, #{createTime},#{updateTime},#{createUser},#{updateUser})
+
+    </insert>
+
+    <update id="updateProduct">
+        update product
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="sweet != null">
+                sweet = #{sweet},
+            </if>
+            <if test="tasteId != null">
+                taste_id = #{tasteId},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+              create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser}
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from product where id = #{id}
+    </delete>
+    <delete id="deleteSize">
+        delete  from size where product_id = #{id}
+    </delete>
+
+    <select id="getById" resultType="com.cake.vo.CakeVO">
+        select * from product where id = #{id}
+    </select>
+    <select id="pageQuery" resultMap="CakeVOResultMap">
+        select p.*,
+        s.id as s_id,
+        s.product_id,
+        s.number,
+        s.price,
+        s.length,
+        s.width,
+        s.weight,
+        s.create_time as s_create_time,
+        s.update_time as s_update_time,
+        s.create_user as s_create_user,
+        s.update_user as s_update_user
+        from product p
+        left join size s on p.id = s.product_id
+        left join taste t on p.taste_id = t.id
+        where p.category_id = 1
+            <if test="tasteId != null">
+                and t.id = #{tasteId}
+            </if>
+            <if test="number != null">
+                and s.number = #{number}
+            </if>
+        ORDER BY p.create_time
+    </select>
+
+    <select id="getTasteList" resultType="com.cake.vo.TasteVO">
+        select *
+        from taste;
+    </select>
+    <select id="getCake" resultType="com.cake.entity.Product">
+        select * from product
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and category_id = #{categoryId}
+            </if>
+            <if test="tasteId != null and tasteId != ''">
+                and taste_id = #{tasteId}
+            </if>
+            <if test="sweet != null and sweet != ''">
+                and sweet = #{sweet}
+            </if>
+        </where>
+    </select>
+
+</mapper>

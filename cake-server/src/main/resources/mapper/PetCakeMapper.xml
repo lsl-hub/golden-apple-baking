@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.PetCakeMapper">
+
+    <resultMap id="PetVOResultMap" type="com.cake.vo.PetVO">
+        <!-- Product 表的基本字段 -->
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="image" column="image"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="tasteId" column="taste_id"/>
+        <result property="sweet" column="sweet"/>
+        <result property="description" column="description"/>
+
+        <!-- Size 实体集合映射 -->
+        <collection property="specs" ofType="com.cake.entity.Size">
+            <id property="id" column="s_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="number" column="number"/>
+            <result property="price" column="price"/>
+            <result property="length" column="length"/>
+            <result property="width" column="width"/>
+            <result property="weight" column="weight"/>
+            <result property="createTime" column="s_create_time"/>
+            <result property="updateTime" column="s_update_time"/>
+            <result property="createUser" column="s_create_user"/>
+            <result property="updateUser" column="s_update_user"/>
+        </collection>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        insert into product(name, image, category_id, description, create_time,  create_user,update_time, update_user) VALUES
+        (#{name},#{image},#{categoryId},#{description},#{createTime},#{createUser},#{updateTime},#{updateUser})
+    </insert>
+    <update id="update">
+        update product
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="image != null">
+                image = #{image},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from product where id = #{id}
+    </delete>
+
+
+    <select id="PageQuery" resultMap="PetVOResultMap">
+        select p.*,
+               s.id as s_id,
+               s.product_id,
+               s.number,
+               s.price,
+               s.length,
+               s.width,
+               s.weight,
+               s.create_time as s_create_time,
+               s.update_time as s_update_time,
+               s.create_user as s_create_user,
+               s.update_user as s_update_user
+        from product p
+                 left join size s on p.id = s.product_id
+        where category_id = 3
+    </select>
+    <select id="getById" resultType="com.cake.entity.Product">
+        select * from product where id = #{id}
+    </select>
+</mapper>

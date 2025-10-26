@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cake.mapper.SizeMapper">
+    <insert id="batchInsertSpecs">
+        insert into size(product_id, number, price, length, width, weight, create_time, update_time, create_user, update_user)
+        VALUES
+        <foreach collection="specs" item="spec" separator=",">
+            (#{spec.productId}, #{spec.number}, #{spec.price}, #{spec.length}, #{spec.width}, #{spec.weight}, #{spec.createTime}, #{spec.updateTime}, #{spec.createUser}, #{spec.updateUser})
+        </foreach>
+
+    </insert>
+
+    <delete id="deleteSize">
+        delete from size where product_id = #{productId}
+    </delete>
+    <select id="findSizeByProuductIds" resultType="com.cake.entity.Size">
+        select *
+        from size where product_id in
+        <foreach collection="cakeIds" item="cakeId" open="(" separator="," close=")">
+            #{cakeId}
+        </foreach>
+    </select>
+    <select id="getPrice" resultType="java.math.BigDecimal">
+        select price from size where product_id = #{productId} and number = #{number}
+    </select>
+    <select id="findSizeByProuductId" resultType="com.cake.entity.Size">
+        select * from size where product_id = #{productId}
+    </select>
+
+</mapper>

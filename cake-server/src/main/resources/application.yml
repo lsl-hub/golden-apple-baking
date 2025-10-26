@@ -1,0 +1,68 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${cake.datasource.driver-class-name}
+      url: jdbc:mysql://${cake.datasource.host}:${cake.datasource.port}/${cake.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${cake.datasource.username}
+      password: ${cake.datasource.password}
+  redis:
+    host: ${cake.redis.host}
+    port: ${cake.redis.port}
+    password: ${cake.redis.password}
+    database: ${cake.redis.database}
+  cache:
+    redis:
+      cache-null-values: true
+  rabbitmq:
+      host: 192.168.117.113
+      port: 5672
+      username: admin
+      password: admin
+      virtual-host: /
+      # 开启消息确认
+      publisher-confirm-type: correlated
+      publisher-returns: true
+      listener:
+        simple:
+          acknowledge-mode: manual
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.cake.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com:
+      cake:
+        mapper: debug
+        service: info
+        controller: info
+
+cake:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: itcast
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+  alioss:
+    endpoint: ${cake.alioss.endpoint}
+    access-key-id: ${cake.alioss.access-key-id}
+    access-key-secret: ${cake.alioss.access-key-secret}
+    bucket-name: ${cake.alioss.bucket-name}
