@@ -23,8 +23,8 @@ spring:
   rabbitmq:
       host:
       port: 5672
-      username:
-      password: admin
+      username: admin
+      password:
       virtual-host: /
       # 开启消息确认
       publisher-confirm-type: correlated
